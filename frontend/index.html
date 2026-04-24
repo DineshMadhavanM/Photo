@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PHOENIX | Premium Photography Management</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="hero">
+        <div class="hero-content">
+            <h1 class="gradient-text">mani.fotography</h1>
+            <p>Mastering the moment through the lens</p>
+            
+            <!-- Client Access Box -->
+            <div class="glass-card" style="margin: 2rem auto; padding: 2rem; max-width: 400px;">
+                <h3 style="margin-bottom: 1rem;">View Your Event</h3>
+                <div class="input-group">
+                    <input type="text" id="clientEventId" placeholder="Enter Event Code" style="text-align: center; text-transform: uppercase; font-weight: 800; letter-spacing: 2px;">
+                </div>
+                <button class="btn btn-primary" onclick="accessEvent()">Enter Gallery</button>
+            </div>
+
+            <div style="display: flex; gap: 1rem; justify-content: center; margin-top: 2rem;">
+                <button class="btn btn-primary" onclick="showAuth('login')" style="width: auto; padding: 0.8rem 2rem; background: var(--glass); font-size: 0.7rem; border-radius: 50px;">Photographer Login</button>
+                <a href="/about.html" style="color: var(--outline); text-decoration: none; font-size: 0.7rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-info-circle"></i> About NexStack</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="about-card">
+            <div class="ceo-img">
+                <img src="assets/dinesh_img.jpeg" style="width: 100%; border-radius: 20px;" alt="CEO Dinesh Madhavan">
+            </div>
+            <div class="ceo-info">
+                <h4>Founder & CEO</h4>
+                <h2>Dinesh Madhavan</h2>
+                <p style="color: var(--outline); font-size: 1.1rem; margin-bottom: 1.5rem;">
+                    NexStack is the vision of Dinesh Madhavan, dedicated to building cutting-edge software that bridges technology and art. We built this platform to give photographers a world-class selection system.
+                </p>
+                <div class="signature">NexStack Digital Foundations</div>
+            </div>
+        </div>
+    </section>
+
+    <div id="authModal" class="modal" onclick="if(event.target == this) this.classList.remove('active')">
+        <div class="glass-card" onclick="event.stopPropagation()">
+            <h2 id="authTitle" style="margin-bottom: 2rem; text-align: center;" class="gradient-text">Welcome Back</h2>
+            <form id="authForm">
+                <div class="input-group" id="nameGroup">
+                    <label>Full Name</label>
+                    <input type="text" id="name" placeholder="John Doe">
+                </div>
+                <div class="input-group">
+                    <label>Email Address</label>
+                    <input type="email" id="email" placeholder="john@example.com" required>
+                </div>
+                <div class="input-group">
+                    <label>Password</label>
+                    <input type="password" id="password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Continue</button>
+            </form>
+            <p style="margin-top: 1.5rem; text-align: center; color: var(--text-dim); font-size: 0.9rem;">
+                <span id="authToggleText">Don't have an account?</span> 
+                <a href="#" onclick="toggleAuthMode()" id="authToggleLink" style="color: var(--primary); text-decoration: none; font-weight: 600;">Sign Up</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

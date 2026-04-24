@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery | PHOENIX</title>
+    <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Specific tweaks for gallery parallax */
+        .parallax-container {
+            scrollbar-width: thin;
+            scrollbar-color: var(--primary) var(--bg-dark);
+        }
+        .parallax-container::-webkit-scrollbar {
+            width: 6px;
+        }
+        .parallax-container::-webkit-scrollbar-thumb {
+            background: var(--primary);
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="parallax-container">
+        <header class="parallax-header layer-1">
+            <img src="https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&q=80&w=2071" class="parallax-bg layer-0" id="headerBg">
+            <div class="hero-content">
+                <h1 id="eventTitle" class="gradient-text">Event Title</h1>
+                <p id="eventDescription">Loading photos...</p>
+                <div style="margin-top: 2rem; font-size: 0.8rem; opacity: 0.6; letter-spacing: 2px;">BY NEXSTACK Digital</div>
+            </div>
+        </header>
+
+        <section class="gallery-grid" id="galleryGrid">
+            <!-- Photos will be loaded here -->
+        </section>
+
+        <!-- Lightbox -->
+        <div id="lightbox" class="lightbox" onclick="this.classList.remove('active')">
+            <img src="" class="lightbox-img" id="lightboxImg">
+        </div>
+
+        <footer style="padding: 4rem; text-align: center; background: var(--bg-dark); color: var(--text-dim);">
+            <p>© <span id="year"></span> mani.fotography | Built by <a href="/about.html" style="color: var(--primary); text-decoration: none;">NexStack Foundations</a></p>
+            <p style="font-size: 0.7rem; margin-top: 1rem;">CEO Dinesh Madhavan</p>
+        </footer>
+    </div>
+
+    <script src="../script.js"></script>
+    <script>
+        const eventId = window.location.pathname.split('/').pop();
+        
+        window.onload = async () => {
+            document.getElementById('year').innerText = new Date().getFullYear();
+            
+            // Load Event Info
+            const event = await fetchAPI(`/api/events/${eventId}`);
+            if (event) {
+                document.getElementById('eventTitle').innerText = event.eventName;
+                document.title = `${event.eventName} | PHOENIX`;
+            }
+
+            // Load Photos
+            const photos = await fetchAPI(`/api/photos/${eventId}`);
+            const grid = document.getElementById('galleryGrid');
+            
+            if (photos && photos.length > 0) {
+                document.getElementById('eventDescription').innerText = `${photos.length} Captured Moments`;
+                // Set the header background to the first photo if available
+                document.getElementById('headerBg').src = photos[0].imageUrl;
+                
+                photos.forEach(photo => {
+                    const div = document.createElement('div');
+                    div.className = 'photo-item';
+                    div.innerHTML = `
+                        <img src="${photo.imageUrl}" loading="lazy" onclick="openLightbox('${photo.imageUrl}')">
+                        <div class="photo-overlay">
+                            <div style="display: flex; gap: 1rem;">
+                                <button class="select-heart ${photo.selected ? 'active' : ''}" onclick="toggleSelect(this, '${photo._id}')">
+                                    <i class="${photo.selected ? 'fas' : 'far'} fa-heart"></i>
+                                </button>
+                                <button class="select-heart" onclick="downloadImage('${photo.imageUrl}', '${photo._id}')">
+                                    <i class="fas fa-download"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(div);
+                });
+            } else {
+                document.getElementById('eventDescription').innerText = "No photos uploaded yet.";
+            }
+        };
+
+        function openLightbox(url) {
+            const lb = document.getElementById('lightbox');
+            const lbImg = document.getElementById('lightboxImg');
+            lbImg.src = url;
+            lb.classList.add('active');
+        }
+
+        async function toggleSelect(btn, photoId) {
+            const isActive = btn.classList.contains('active');
+            const res = await fetchAPI('/api/photos/select', {
+                method: 'POST',
+                body: JSON.stringify({ photoId, selected: !isActive })
+            });
+
+            if (res) {
+                btn.classList.toggle('active');
+                const icon = btn.querySelector('i');
+                icon.className = !isActive ? 'fas fa-heart' : 'far fa-heart';
+            }
+        }
+        async function downloadImage(url, id) {
+            try {
+                const response = await fetch(url);
+                const blob = await response.blob();
+                const blobUrl = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = blobUrl;
+                a.download = `photo-${id}.jpg`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(blobUrl);
+                document.body.removeChild(a);
+            } catch (err) {
+                console.error('Download failed:', err);
+                // Fallback: Just open in new tab
+                window.open(url, '_blank');
+            }
+        }
+    </script>
+</body>
+</html>

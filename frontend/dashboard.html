@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard | PHOENIX</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <nav class="dashboard-nav">
+        <div class="logo">mani.fotography</div>
+        <div style="display: flex; gap: 2rem; align-items: center;">
+            <a href="/about.html" style="color: var(--outline); text-decoration: none; font-size: 0.8rem;">About NexStack</a>
+            <span id="userName" style="font-weight: 600; color: var(--text-dim);">Photographer</span>
+            <button class="btn btn-primary" onclick="logout()" style="width: auto; padding: 0.5rem 1.5rem; font-size: 0.8rem; background: var(--glass);">Logout</button>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="section-header">
+            <div>
+                <h1 class="gradient-text">My Events</h1>
+                <p style="color: var(--text-dim);">Manage your photography projects</p>
+            </div>
+            <button class="btn btn-primary" onclick="window.location.hash = 'create'" style="width: auto; padding: 1rem 2rem;">+ New Event</button>
+        </header>
+
+        <div id="eventsGrid" class="event-grid">
+            <!-- Events will be loaded here -->
+        </div>
+    </main>
+
+    <!-- Flutter Bottom Nav -->
+    <nav class="mobile-nav">
+        <a href="#" class="nav-item active"><i class="fas fa-home"></i><span>Events</span></a>
+        <a href="#" class="nav-item" onclick="window.location.hash = 'create'"><i class="fas fa-plus"></i><span>New</span></a>
+        <a href="#" class="nav-item" onclick="logout()"><i class="fas fa-sign-out-alt"></i><span>Exit</span></a>
+    </nav>
+
+    <!-- Mobile FAB -->
+    <button class="fab" onclick="window.location.hash = 'create'">
+        <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Create Event Modal -->
+    <div id="createEventModal" class="modal">
+        <div class="glass-card">
+            <h2 style="margin-bottom: 2rem;" class="gradient-text">Create New Event</h2>
+            <form id="createEventForm">
+                <div class="input-group">
+                    <label>Event Name (e.g., Rahul Wedding)</label>
+                    <input type="text" id="eventName" placeholder="A Dreamy Wedding" required>
+                </div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">Create Event</button>
+                    <button type="button" class="btn btn-primary" onclick="window.location.hash = ''" style="background: var(--glass);">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Upload Modal -->
+    <div id="uploadModal" class="modal">
+        <div class="glass-card">
+            <h2 id="uploadTitle" style="margin-bottom: 2rem;" class="gradient-text">Upload Photos</h2>
+            <form id="uploadForm">
+                <input type="hidden" id="uploadEventId">
+                <div class="input-group">
+                    <label>Select Photos (Max 100 at a time)</label>
+                    <input type="file" id="photoFiles" multiple accept="image/*" required style="padding: 3rem; background: rgba(255,255,255,0.02); border: 2px dashed var(--glass-border);">
+                </div>
+                <div id="uploadStatus" style="margin-top: 1rem; font-size: 0.9rem; display: none;">Uploading... Please wait</div>
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary" id="uploadBtn">Start Upload</button>
+                    <button type="button" class="btn btn-primary" onclick="window.location.hash = ''" style="background: var(--glass);">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        // Check session on load
+        window.onload = async () => {
+            const user = await checkSession();
+            if (!user) window.location.href = '/';
+            document.getElementById('userName').innerText = user.name;
+            loadEvents();
+        };
+
+        // Modal routing
+        window.onhashchange = () => {
+            const hash = window.location.hash;
+            document.querySelectorAll('.modal').forEach(m => m.classList.remove('active'));
+            if (hash === '#create') document.getElementById('createEventModal').classList.add('active');
+            if (hash.startsWith('#upload/')) {
+                const eventId = hash.split('/')[1];
+                document.getElementById('uploadEventId').value = eventId;
+                document.getElementById('uploadModal').classList.add('active');
+            }
+        };
+    </script>
+</body>
+</html>
