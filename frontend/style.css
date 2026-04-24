@@ -255,12 +255,16 @@ body {
 .hero-content {
     z-index: 1;
     max-width: 800px;
+    width: 100%;
+    padding: 0 1.5rem; /* Added safety padding */
 }
 
 .hero h1 {
-    font-size: clamp(3rem, 10vw, 6rem);
+    font-size: clamp(2.2rem, 8vw, 5rem); /* Reduced minimum from 3rem to 2.2rem */
     margin-bottom: 1rem;
     font-style: italic;
+    word-break: break-word;
+    line-height: 1.1;
 }
 
 .hero p {
