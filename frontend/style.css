@@ -260,10 +260,10 @@ body {
 }
 
 .hero h1 {
-    font-size: clamp(2.2rem, 8vw, 5rem); /* Reduced minimum from 3rem to 2.2rem */
+    font-size: clamp(1.6rem, 7vw, 5rem); /* Reduced minimum to 1.6rem for perfect fit */
     margin-bottom: 1rem;
     font-style: italic;
-    word-break: break-word;
+    white-space: nowrap; /* Forces text to stay on one line */
     line-height: 1.1;
 }
 
