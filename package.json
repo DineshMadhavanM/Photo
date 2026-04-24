@@ -1,0 +1,8 @@
+{
+  "name": "photo-selection-system",
+  "version": "1.0.0",
+  "scripts": {
+    "install-all": "cd backend && npm install",
+    "start": "cd backend && node server.js"
+  }
+}
