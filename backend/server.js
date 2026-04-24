@@ -32,7 +32,8 @@ app.use(session({
 }));
 
 // Static Files (Frontend)
-app.use(express.static(path.join(__dirname, '../frontend')));
+const frontendPath = path.resolve(__dirname, '..', 'frontend');
+app.use(express.static(frontendPath));
 
 // Routes
 app.use('/api/auth', require('./routes/auth'));
@@ -40,9 +41,10 @@ app.use('/api/events', require('./routes/event'));
 app.use('/api/photos', require('./routes/photo'));
 
 // Serve Frontend Files
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, '../frontend/index.html')));
-app.get('/dashboard', (req, res) => res.sendFile(path.join(__dirname, '../frontend/dashboard.html')));
-app.get('/event/:eventId', (req, res) => res.sendFile(path.join(__dirname, '../frontend/gallery.html')));
+app.get('/', (req, res) => res.sendFile(path.join(frontendPath, 'index.html')));
+app.get('/dashboard', (req, res) => res.sendFile(path.join(frontendPath, 'dashboard.html')));
+app.get('/about', (req, res) => res.sendFile(path.join(frontendPath, 'about.html')));
+app.get('/event/:eventId', (req, res) => res.sendFile(path.join(frontendPath, 'gallery.html')));
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
